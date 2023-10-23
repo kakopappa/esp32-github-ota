@@ -4,7 +4,7 @@ This repo demonstrates how to download an OTA bin file from GitHub and update it
 
 **This library supports only ESP32.**
 
-1. The program checks for `version_check_url` for an update that returns an integer (happens in a seperate RTOS task). recommended using something like YYYYMMDDRR where R = release of the day
+1. The program checks for `version_check_url` for an update that returns an integer. This happens in a separate RTOS task. recommended using something like YYYYMMDDRR where R = release of the day for versioning.
 2. Check the returned version against the current firmware version `current_fw_version`
 3. If a newer version is returned, update.
 
