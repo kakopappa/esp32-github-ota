@@ -1,11 +1,11 @@
 # ESP32 Github OTA Update
 
-This repo demonstrates how to download a OTA bin file from GitHub and update it self. 
+This repo demonstrates how to download an OTA bin file from GitHub and update itself. 
 
 **This library supports only ESP32.**
 
-1. Program checks for `VERSION_URL` for an update which returns an integer. recommened using something like YYYYMMDDRR where R = release of the day
-2. Check the returned version aginst current firmware version `current_fw_version`
+1. The program checks for `version_check_url` for an update that returns an integer (happens in a seperate RTOS task). recommended using something like YYYYMMDDRR where R = release of the day
+2. Check the returned version against the current firmware version `current_fw_version`
 3. If a newer version is returned, update.
 
 ## Minimal example
@@ -16,9 +16,10 @@ This repo demonstrates how to download a OTA bin file from GitHub and update it 
 #include "HttpReleaseUpdate.h"
 #include "ESP32GithubOtaUpdate.h"
 
-const char* OTA_FILE_LOCATION = "https://raw.githubusercontent.com/username/repo/main/esp32_latest.bin";
-const char* VERSION_URL = "https://raw.githubusercontent.com/username/repo/main/version.txt";
+const char* ota_file_url = "https://raw.githubusercontent.com/username/repo/main/esp32_latest.bin";
+const char* version_check_url = "https://raw.githubusercontent.com/username/repo/main/version.txt";
 const int current_fw_version = 2024092302;  // YYYYMMDDRR where R = release of the day
+const int update_check_interval = 60; // Check every 60 seconds.
 
 #define SSID  "" // Your WiFi SSID
 #define PASS  "" // Your WiFi Password
@@ -44,10 +45,10 @@ void setupWiFi() {
 }
 
 void setupOtaUpdate() {
-  otaUpdate.setOTADownloadUrl(OTA_FILE_LOCATION);
-  otaUpdate.setVersionCheckUrl(VERSION_URL);
+  otaUpdate.setOTADownloadUrl(ota_file_url);
+  otaUpdate.setVersionCheckUrl(version_check_url);
   otaUpdate.setCurrentFirmwareVersion(current_fw_version);
-  otaUpdate.setUpdateCheckInterval(60); // Check every 60 seconds.
+  otaUpdate.setUpdateCheckInterval(update_check_interval);
   otaUpdate.begin();
 }
 
